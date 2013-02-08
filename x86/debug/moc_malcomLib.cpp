@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'malcomLib.hpp'
 **
-** Created: Fri Jan 18 18:27:30 2013
+** Created: Fri Feb 1 11:11:37 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!

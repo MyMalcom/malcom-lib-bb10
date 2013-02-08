@@ -13,6 +13,7 @@
 #include <qt4/QtNetwork/QNetworkRequest>
 #include <qt4/QtNetwork/QNetworkReply>
 #include <QLocale>
+#include <QSslConfiguration>
 
 using namespace bb::cascades;
 
@@ -36,13 +37,16 @@ MCMStats::~MCMStats() {
 
 void MCMStats::initAndStartBeacon() {
 
-	started_on = QString::number(QDateTime().currentMSecsSinceEpoch());
+	started_on = QString::number(QDateTime::currentDateTime().toTime_t());
 	Utils::log("initAndStartBeacon: "+started_on);
+	//qint64 date_time = QDateTime().currentMSecsSinceEpoch();
+	//Utils::log("Timestamp: "+date_time);
 
 }
 void MCMStats::endBeacon() {
 
-	stopped_on = QString::number(QDateTime().currentMSecsSinceEpoch());
+	stopped_on = QString::number(QDateTime::currentDateTime().toTime_t());
+
 	Utils::log("start_on: "+started_on);
 	Utils::log("stop_on: "+stopped_on);
 
@@ -62,14 +66,17 @@ void MCMStats::endBeacon() {
 
 	//Utils::log("Milisegundos: "+start.setNum(started_on.currentMSecsSinceEpoch()));
 
-	QString json = MCMJson::fromHashToString(jsonHash);
+	QString json = MCMJson::fromHashToString(jsonHash, "beacon");
 
-	Utils::log(MCMJson::fromHashToString(jsonHash));
+	Utils::log(MCMJson::fromHashToString(jsonHash, "beacon"));
 
 	disconnect(&networkAccessManager, 0, 0, 0);
 	connect(&networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(sendBeaconFinished(QNetworkReply*)));
 
 	QNetworkRequest networkRequest = generateBasicNetworkRequestObject();
+	QSslConfiguration cfg(networkRequest.sslConfiguration());
+	cfg.setSslOption(QSsl::SslOptionDisableSessionTickets, true);
+	networkRequest.setSslConfiguration(cfg);
 	networkRequest.setRawHeader("Content-Type", "application/json");
 	//json = "{\"beacon\":{\"app_version\":1,\"application_code\":\"com.yourcompany.FCBarcelona\",\"device_model\":\"i386\",\"device_os\":3,\"device_platform\":\"iOS\",\"city\":\"barcelona\",\"tags\":[\"tag1\",\"tag2\",\"tag3\"],\"location\":{\"accuracy\":0,\"latitude\":41.389939,\"longitude\":2.177603,\"timestamp\":\"2009-09-18T14:49:29.500+02:00\"},\"started_on\":1.253278154054249E9,\"stopped_on\":1.253278169438035E9,\"subbeacons\":[{\"name\":\"categoria uno\",\"started_on\":0.22,\"stopped_on\":0.33},{\"name\":\"categoria dos\",\"started_on\":0.22,\"stopped_on\":0.33},{\"name\":\"categoria tres\",\"started_on\":0.22,\"stopped_on\":0.33},{\"name\":\"categoria cuatro\",\"started_on\":0.22,\"stopped_on\":0.33}],\"udid\":\"7AA06235-E805-542B-8410-7DABA1726018\"}}";
 	networkAccessManager.post(networkRequest, json.toUtf8());
@@ -92,10 +99,10 @@ QNetworkRequest MCMStats::generateBasicNetworkRequestObject() {
 	QSettings settings;
 
 	QString url(settings.value("malcom_url_api").toString() + "v1/beacon");
-
+	Utils::log("URL: "+url);
 	networkRequest.setUrl(url);
 
-	QString json = MCMJson::fromHashToString(jsonHash);
+	QString json = MCMJson::fromHashToString(jsonHash, "beacon");
 	QString md5 = Utils::md5(json);
 	QString malcomDate = QDateTime().currentDateTime().toUTC().toString("ddd, dd MMM yyyy HH:mm:ss ")+ "UTC";
 	QString paswd = "POST\n" +

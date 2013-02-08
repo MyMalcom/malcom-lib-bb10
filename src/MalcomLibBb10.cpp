@@ -5,10 +5,18 @@
 #include <bb/cascades/QmlDocument>
 #include <QVariantList>
 
+#include "MCMNotification.hpp"
+
 using namespace bb::cascades;
 
-const QString uuidMalcom = ""; // SET YOUR MALCOM UUID
-const QString secretKeyMalcom = ""; //	SET YOUR MALCOM SECRET KEY
+//	PROD
+//const QString uuidMalcom = "a1026807-e078-4d1d-bb3d-d618c1dbc8f7"; // SET YOUR MALCOM UUID
+//const QString secretKeyMalcom = "c1971A7hcwzDOjrjzwUoaQ=="; //	SET YOUR MALCOM SECRET KEY
+
+//	PRE
+const QString uuidMalcom = "675ab455-bcb8-47ef-8a7d-3bdc0c88fbde"; // SET YOUR MALCOM UUID
+const QString secretKeyMalcom = "Qw7E3oYy9FFtOze84W3TrA=="; //	SET YOUR MALCOM SECRET KEY
+
 
 MalcomLibBb10::MalcomLibBb10(bb::cascades::Application *app)
 : QObject(app)
@@ -48,6 +56,7 @@ MalcomLibBb10::MalcomLibBb10() {
 
 void MalcomLibBb10::onFullscreen() {
 	MalcomLib::Instance() -> initAndStartBeacon();
+	MCMNotification::Instance() -> registerDevice();
 }
 
 void MalcomLibBb10::onThumbnail() {

@@ -102,7 +102,20 @@
     <permission system="true">run_native</permission>
     <permission>read_device_identifying_information</permission>
     <permission>access_internet</permission>
+    <permission>post_notification</permission>
     
     <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
+
+	<action system="true">_sys_use_consumer_push</action>
+   
+   <invoke-target id="com.malcom.client.sample">
+   		<entry-point>1</entry-point>
+        <invoke-target-name>InvokeTarget Push</invoke-target-name>
+        <type>application</type>
+        <filter>
+            <action>bb.action.PUSH</action>
+            <mime-type>application/vnd.push</mime-type>
+        </filter>
+    </invoke-target>
 
 </qnx>

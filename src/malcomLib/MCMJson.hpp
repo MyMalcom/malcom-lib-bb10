@@ -13,9 +13,9 @@
 class MCMJson {
 
 public:
-	static QString fromHashToString(QHash<QString, QString> hash) {
+	static QString fromHashToString(QHash<QString, QString> hash, QString type) {
 
-		QString jsonString = "{\"beacon\":{";
+		QString jsonString = "{\""+type+"\":{";
 
 		QHashIterator<QString, QString> i(hash);
 

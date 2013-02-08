@@ -41,7 +41,8 @@ void MalcomLib::initMalcom(QString uuid, QString secretKey) {
 	QSettings settings;
 	settings.setValue(MALCOM_UUID, uuid);
 	settings.setValue(MALCOM_SECRET_KEY, secretKey);
-	settings.setValue(MALCOM_URL_API, "http://api.mymalcom.com/");
+	//settings.setValue(MALCOM_URL_API, "http://api.mymalcom.com/");
+	settings.setValue(MALCOM_URL_API, "http://malcom-api-pre.elasticbeanstalk.com/");
 
 	m_url_api = MALCOM_URL_API + uuid + "/" + secretKey;
 
